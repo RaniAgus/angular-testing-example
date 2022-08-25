@@ -1,24 +1,20 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Subject, take, takeUntil } from 'rxjs';
 import { User } from '../../shared/models/user';
-import { UsersService } from '../../shared/services/users.service';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
-  destroy = new Subject<void>();
-
+export class UserListComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<User>;
 
-  dataSource: MatTableDataSource<User> = new MatTableDataSource<User>([]);
+  @Input() dataSource?: MatTableDataSource<User>;
   displayedColumns = [
     'id',
     'name',
@@ -28,15 +24,13 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
     'company',
   ];
 
-  constructor(private usersService: UsersService) {}
-
-  ngOnInit(): void {
-    this.usersService.getAllUsers()
-      .pipe(take(1), takeUntil(this.destroy))
-      .subscribe((users) => { this.dataSource.data = users; });
-  }
+  constructor() {}
 
   ngAfterViewInit(): void {
+    if (!this.dataSource) {
+      console.error('No data source');
+      return;
+    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
@@ -50,10 +44,5 @@ export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         return (user as any)[property];
     }
-  }
-
-  ngOnDestroy(): void {
-    this.destroy.next();
-    this.destroy.complete();
   }
 }

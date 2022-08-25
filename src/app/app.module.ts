@@ -16,12 +16,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { UserListComponent } from './users/user-list/user-list.component';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LayoutComponent,
     UserListComponent,
+    UsersComponent,
   ],
   imports: [
     BrowserModule,
