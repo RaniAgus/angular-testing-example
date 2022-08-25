@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { User } from '../../shared/models/user';
 import { UsersService } from '../../shared/services/users.service';
 
@@ -11,7 +11,9 @@ import { UsersService } from '../../shared/services/users.service';
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent implements OnInit, AfterViewInit {
+export class UserListComponent implements OnInit, AfterViewInit, OnDestroy {
+  destroy = new Subject<void>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<User>;
@@ -30,8 +32,8 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.usersService.getAllUsers()
-      .pipe(take(1))
-      .subscribe(data => this.dataSource.data = data);
+      .pipe(take(1), takeUntil(this.destroy))
+      .subscribe((users) => { this.dataSource.data = users; });
   }
 
   ngAfterViewInit(): void {
@@ -41,10 +43,17 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.table.dataSource = this.dataSource;
   }
 
-  sortingDataAccessor(data: User, property: string): string | number {
-    switch(property) {
-      case 'company': return data.company.name;
-      default: return (data as any)[property];
+  sortingDataAccessor(user: User, property: string): string | number {
+    switch (property) {
+      case 'company':
+        return user.company.name;
+      default:
+        return (user as any)[property];
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 }
