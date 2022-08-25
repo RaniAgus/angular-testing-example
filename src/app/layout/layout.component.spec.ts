@@ -7,15 +7,15 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { HeaderComponent } from './header.component';
+import { LayoutComponent } from './layout.component';
 
-describe('HeaderComponent', () => {
-  let component: HeaderComponent;
-  let fixture: ComponentFixture<HeaderComponent>;
+describe('LayoutComponent', () => {
+  let component: LayoutComponent;
+  let fixture: ComponentFixture<LayoutComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HeaderComponent],
+      declarations: [LayoutComponent],
       imports: [
         NoopAnimationsModule,
         LayoutModule,
@@ -29,7 +29,7 @@ describe('HeaderComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HeaderComponent);
+    fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -39,7 +39,7 @@ describe('HeaderComponent', () => {
   });
 
   it(`should have as title 'angular-testing-example'`, () => {
-    const fixture = TestBed.createComponent(HeaderComponent);
+    const fixture = TestBed.createComponent(LayoutComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('angular-testing-example');
   });

@@ -5,10 +5,10 @@ import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.css']
 })
-export class HeaderComponent {
+export class LayoutComponent {
   title = 'angular-testing-example';
 
   isHandset$: Observable<boolean>;
